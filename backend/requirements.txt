@@ -1,0 +1,10 @@
+fastapi
+asyncpg
+pydantic
+pydantic-settings
+pydantic_core
+pydantic[email]
+SQLAlchemy[asyncio]
+uvicorn
+PyJWT
+bcrypt
