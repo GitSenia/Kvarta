@@ -5,6 +5,7 @@ from sqlalchemy import select
 
 from app.db.base import Session
 from app.db.models.Leads import Lead
+from app.db.models.TelegramManager import TelegramManager
 from app.schemas.Leads import LeadCreate
 
 DEDUP_MINUTES = 10
@@ -44,3 +45,27 @@ async def insert_into_leads(payload: LeadCreate) -> Lead:
         await session.refresh(lead)
         return lead
 
+
+
+async def add_to_telegram(telegram_id: str) -> bool:
+    """Добавляет менеджера. Возвращает False, если chat_id уже был."""
+    chat_id = str(telegram_id).strip()
+    async with Session() as session:
+        existing = await session.scalar(
+            select(TelegramManager).where(TelegramManager.telegram_id == chat_id)
+        )
+        if existing is not None:
+            return False
+
+        manager = TelegramManager(telegram_id=chat_id)
+        session.add(manager)
+        await session.commit()
+        await session.refresh(manager)
+        return True
+
+
+async def get_from_telegram() -> list[str]:
+    """Список telegram chat_id менеджеров."""
+    async with Session() as session:
+        result = await session.execute(select(TelegramManager.telegram_id))
+        return list(result.scalars().all())

@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     # JWT
     JWT_SECRET: str
 
+    TG_KEY: str
+
     @property
     def DATABASE_URL(self) -> str:
         return (

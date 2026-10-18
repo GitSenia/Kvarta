@@ -11,6 +11,7 @@ services:
       DB_NAME: ${DB_NAME}
       KAFKA_BROKER: ${KAFKA_BROKER:-kafka:9092}
       JWT_SECRET: ${JWT_SECRET:-change-me-dev-secret}
+      TG_KEY: ${TG_KEY}
     depends_on:
       db:
         condition: service_healthy
